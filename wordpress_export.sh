@@ -3,7 +3,7 @@
 # Based on a script at http://itpoetry.wordpress.com/2008/02/07/bash-script-to-export-and-backup-some-data/
 
 # Info: Bash script to download the export file for wordpress.com blogs and
-#       accumpaning media files.
+#       accompanying media files.
 #
 #       The export XML file contains "posts, pages, comments, custom fields, 
 #       categories, and tags." Though it does not contain media uploaded. This 
@@ -28,7 +28,7 @@
 # not imply endorsement by the author.
 
 
-#if you leave these empty, the script will try to get them interactivlly
+#if you leave these empty, the script will try to get them interactively
 wpuser='' #wordpress.com user name
 wpblog='' #wordpress.com blog name (the part that appears in the domain)
 wppwd='' #wordpress.com password
