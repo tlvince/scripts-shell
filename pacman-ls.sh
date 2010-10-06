@@ -1,15 +1,22 @@
 #!/bin/sh
+#
+# pacman-ls.sh: List installed packages by repo.
+#
+# Copyright 2010 Tom Vincent <http://www.tlvince.com/contact/>
 
 PACKAGES="$(pacman -Sl)"
-REPOS="$(pacman -Sl | cut -f1 -d ' ' | uniq)"
+REPOS="$(echo "$PACKAGES" | cut -f1 -d ' ' | uniq)"
+OUT="$HOME/bak/packages/tmp"
+VERBOSE=true
 
-echo "Total installed packages:"
-for r in $REPOS; do
-    total=$(echo "$PACKAGES" | grep "^$r")
-    installed=$(echo "$PACKAGES" | grep "^$r.*\[installed\]")
-    installedCount=$(echo "$installed" | wc -l)
-    echo "$installed" | cut -f2 -d ' ' > "$r-$(date +"%F").txt"
-    echo -n "$r: $installedCount"
-    echo -n "/"
-    echo "$total" | wc -l
+mkdir -p "$OUT"
+
+$VERBOSE && echo "Total installed packages:"
+for repo in $REPOS; do
+    list="$(echo "$PACKAGES" | grep "^$repo")"
+    installed="$(echo "$list" | grep "\[installed\]")"
+    echo "$installed" | cut -f2 -d ' ' > "$OUT/$repo-$(date +"%F").txt"
+    $VERBOSE && {
+        echo "$repo: $(echo "$installed" | wc -l)/$(echo "$list" | wc -l)"
+    }
 done
