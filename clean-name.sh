@@ -1,49 +1,50 @@
-#!/bin/sh
-# Title:    clean-name.sh
-# Author:   Tom Vincent
-# Created:  0.3.0 (2009-09-15)
-# Updated:  0.3.1 (2010-03-23)
+#!/bin/bash
 #
-# A script to rename files and directories following a pattern.
-# Based on "renamer" by pbrisbin (http://pbrisbin.com:8080/bin/renamer) and
-# help from gnud and Cerebral
-# (http://bbs.archlinux.org/viewtopic.php?pid=621096#p621096)
+# clean-name: sanitise file and directory names.
+#
+# Copyright 2009, 2010 Tom Vincent <http://www.tlvince.com/contact/>
 
 PATTERNS="
     s/[A-Z]*/\L&/g          # Replace uppercase with lowercase (\L&)
     s/ /-/g                 # Replace spaces
-    s/[{}\(\)\\!',*]//g      # Delete some special chars
+    s/[{}\(\)\\!',*+]//g    # Delete various special chars
     s/[\\d038]/-and-/g      # Replace the amperstad (ascii no 38 decimal)
     s/_/-/g                 # Replace underscores with dashes
     s/-\{2,\}/-/g           # Translate all series of dashes to just one dash
 "
 
-message() {
-  echo "usage: renamer [dir1] [dir2] ..."
-  echo
-  exit 1
+sanitise()
+{
+    dir="$(dirname "$1")"
+    old="$(basename "$1")"
+    new="$(echo $old | sed -e "$PATTERNS")"
+    [[ "$old" != "$new" ]] && mv -iv "$dir/$old" "$dir/$new"
 }
 
-renameit() {
-    dir=$(dirname "$1")
-    old=$(basename "$1")
-    new=$(echo $old | sed -e "$PATTERNS")
+usage() { echo "usage: $0 [dir1] [dir2] ..."; exit 1; }
 
-    [ "$old" != "$new" ] && mv -iv "$dir/$old" "$dir/$new"
+rdir()
+{
+    local dir
 
+    while IFS='' read -d '' -r dir; do
+        sanitise "$dir"
+    done < <(find "$1" -depth -print0)
 }
 
-[ $# -lt 1 ] && message
+main()
+{
+    [[ $@ ]] || usage
 
-# can pass mixture of dirs and files
-# files are changed in basename
-# dirs are changed recursively
-for arg in "$@"; do
-  if [ -d "$arg" ]; then
-    find "$arg" -depth | while read dir; do
-      renameit "$dir"
+    for arg in "$@"; do 
+      if [[ -d "$arg" ]]; then
+        rdir "$arg"
+      elif [[ -e "$arg" ]]; then
+        sanitise "$arg"
+      else
+        usage
+      fi
     done
-  else
-    renameit "$arg"
-  fi
-done
+}
+
+main "$@"
