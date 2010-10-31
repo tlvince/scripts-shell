@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# Author: Andrew Harvey (http://andrewharvey4.wordpress.com/)
-# Date: 07 Dec 2009
+# Author: Andrew Harvey <http://andrewharvey4.wordpress.com/>
+# Author: Tom Vincent <http://www.tlvince.com/contact/>
 #
 # Copyright: http://creativecommons.org/publicdomain/zero/1.0/
 #
