@@ -1,22 +1,8 @@
 #!/bin/bash
-
-# Based on a script at http://itpoetry.wordpress.com/2008/02/07/bash-script-to-export-and-backup-some-data/
-
-# Info: Bash script to download the export file for wordpress.com blogs and
-#       accompanying media files.
 #
-#       The export XML file contains "posts, pages, comments, custom fields, 
-#       categories, and tags." Though it does not contain media uploaded. This 
-#       script will try to grab those too (but it may not be 100% reliable).
-
-# Usage: ./scriptname [prefix]
-#        prefix (optional)
-#            the directory to store the xml file and the other media files.
-#            default is the current directory (.)
-
 # Author: Andrew Harvey (http://andrewharvey4.wordpress.com/)
 # Date: 07 Dec 2009
-
+#
 # Copyright: http://creativecommons.org/publicdomain/zero/1.0/
 #
 # The person who associated a work with this document has dedicated the work to
@@ -27,8 +13,8 @@
 # Works under CC0 do not require attribution. When citing the work, you should 
 # not imply endorsement by the author.
 
+verbose=true
 
-#if you leave these empty, the script will try to get them interactively
 wpuser='' #wordpress.com user name
 wpblog='' #wordpress.com blog name (the part that appears in the domain)
 wppwd='' #wordpress.com password
@@ -38,7 +24,7 @@ timestamp=`date +%Y%m%d%H%M`; #for our export file
 #check for prefix in arguments
 case $# in
 1) prefix=$1;;
-*) prefix='./';;
+*) prefix='.';;
 esac
 
 #check to add / after directory if ommited
@@ -49,32 +35,26 @@ fi
 
 mkdir -p $prefix
 
-echo "Saving files in $prefix"
+$verbose && echo "Saving files in $prefix"
 
-#if we don't have the variables defined, ask the user
-#hacky way to do an if...
-[ "$wpuser" == "" ] && echo "Please enter your wordpress.com user name:" && read wpuser;
-[ "$wpblog" == "" ] && echo "Please enter your wordpress.com blog name:" && read wpblog;
-[ "$wppwd" == "" ] && echo "Please enter your wordpress.com user password:" && read wppwd;
+[[ -z "$wpblog" ]] && read -p "Blog URL: " wpblog;
+[[ -z "$wpuser" ]] && read -p "Username: " wpuser;
+[[ -z "$wppwd" ]] && read -sp "Password: " wppwd;
 
-#if blog is left blank just use the user name
-[ "$wpblog" == "" ] && wpblog="$wpuser"
-
-echo "Exporting WordPress.com blog: $wpblog by $wpuser";
+$verbose && echo "Exporting WordPress blog: $wpblog by $wpuser"
 
 mkdir -p temp
 cookies="temp/cookies.txt";
 touch $cookies
 
-echo "Logging in to wordpress.com";
-
-echo "Getting the cookies check cookie...";
+$verbose && echo "Logging in to wordpress"
+$verbose && echo "Getting the cookies check cookie..."
 #set the cookie that we must accept to prove we can store cookies
 curl --cookie-jar "$cookies"\
      --output /dev/null \
-     "https://${wpblog}.wordpress.com/wp-login.php"
+     "${wpblog}/wp-login.php"
 
-echo "Setting the authentication cookies...";
+$verbose && echo "Setting the authentication cookies...";
 #get the session cookies (ie. login)
 #post data:
 #log	username
@@ -89,34 +69,35 @@ echo "Setting the authentication cookies...";
 curl --cookie-jar "$cookies" \
      --output "temp/login.html" \
      --max-redirs 0 \
-	 --data "log=${wpuser}&pwd=${wppwd}&rememberme=forever&redirect_to=https%3A%2F%2F${wpblog}.wordpress.com%2Fwp-admin%2F&testcookie=1&wp-submit=Log%20In" \
-     "https://${wpblog}.wordpress.com/wp-login.php"
+	 --data "log=${wpuser}&pwd=${wppwd}&rememberme=forever&redirect_to=${wpblog}%2Fwp-admin%2F&testcookie=1&wp-submit=Log%20In" \
+     "${wpblog}/wp-login.php"
 
 #we're using https so don't worry, leaving it in seems to cause wget not to use the cookie
 cat "$cookies" | sed 's/#HttpOnly_//' > temp/cookies2.txt
 mv temp/cookies2.txt "$cookies"
 
-target=${wpblog}.${timestamp}.xml
-target_full="${prefix}${target}"
+target="wordpress-${timestamp}.xml"
+target_full="${prefix}/${target}"
 
-echo "Downloading export to $target";
+$verbose && echo "Downloading export to $target";
 wget --secure-protocol=auto \
      --keep-session-cookies \
      --load-cookies "$cookies" \
    	 --output-document="$target_full" \
  	 --max-redirect=0\
-	 "https://${wpblog}.wordpress.com/wp-admin/export.php?download=true&submit=Download%20Export%20File"
+	 "${wpblog}/wp-admin/export.php?download=true&submit=Download%20Export%20File"
 
 #may fail this test and things are still okay if things get changed at wordpress.com
 #just comment this out if you wan't to go ahead anyway
-if grep --quiet '<!-- generator="WordPress.com"' "$target_full"; then #successfully saved export file
-	echo "Sucessfully Exported Blog"
+if grep --quiet -F "WordPress" "$target_full"; then #successfully saved export file
+	$verbose && echo "Sucessfully Exported Blog"
 else #failed
-	echo "Exported file does not look correct."
+	echo "Exported file does not look correct." >&2
 	exit 2
 fi
 
-echo "Downloading media files... (may take a while)"
+exit
+$verbose && echo "Downloading media files... (may take a while)"
 #download any uploaded media files (I only check for ones that have .ext where .ext is allowed)
 #these may change over time, and certain addon products allow more.
 egrep -oe "http://${wpblog}\.files\.wordpress\.com[^\"]*\.((jpg)|(jpeg)|(png)|(gif)|(pdf)|(doc)|(ppt)|(odt)|(pptx)|(docx))" "$target_full" | sort | uniq > temp/files.txt
