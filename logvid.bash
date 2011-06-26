@@ -10,7 +10,8 @@ watched="$data_home/watched.txt"
 touch "$watched"
 
 # Helper functions {{{1
-error() { echo "${0##*/}: error: $@" >&2; exit 1; }
+info() { echo "${0##*/}: $@"; }
+error() { info "error: $@" >&2; exit 1; }
 
 # Find an unwatched video. {{{1
 #
@@ -26,26 +27,35 @@ queue() {
     echo "$next"
 }
 
+# Get the user's rating of the video.
+#
+# 2 point scale, influenced by:
+# http://blog.viewfinder.io/
+#
+# A rating is either:
+#
+#  0 - Good
+#  1 - Bad
+#
+# Returns a rating, otherwise null.
+rating() {
+    read -p "${0##*/}: rating: " rating
+    if [[ "$rating" = 0 || "$rating" = 1 ]]; then
+        echo "$rating"
+    fi
+}
+
 # Main {{{1
 # Play the video
 video="$(queue "${1:-.}")"
 if [[ "$video" ]]; then
-    mplayer -really-quiet "$video"
+    info "playing: ${video##*/}"
+    mplayer -really-quiet -fs "$video"
 
-    # Get the user's rating of the video.
-    #
-    # 3 point scale, influenced by:
-    # http://blog.viewfinder.io/
-    #
-    # -1 - Unrated
-    #  0 - Good
-    #  1 - Bad
-    read -p "Rating: " rating
-    if [[ "$rating" != 0 && "$rating" != 1 ]]; then
-        rating=-1
+    rating="$(rating)"
+    if [[ "$rating" ]]; then
+        # Log both
+        echo -e "${video##*/}\t$rating" >> "$watched"
     fi
-
-    # Log both
-    echo -e "${video##*/}\t$rating" >> "$watched"
 fi
 
