@@ -48,13 +48,17 @@ rating() {
 
 # Main {{{1
 
+# Parse options
 case "$1" in -h|--help) usage; exit;; esac
-# Play the video
+
+# Queue a video
 video="$(queue "${1:-.}")"
 if [[ "$video" ]]; then
+    # Play the video
     info "playing: ${video##*/}"
     mplayer -really-quiet -fs "$video"
 
+    # Rate the video
     rating="$(rating)"
     if [[ "$rating" ]]; then
         # Log both
