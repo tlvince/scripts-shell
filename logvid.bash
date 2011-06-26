@@ -12,6 +12,7 @@ touch "$watched"
 # Helper functions {{{1
 info() { echo "${0##*/}: $@"; }
 error() { info "error: $@" >&2; exit 1; }
+usage() { echo "usage: ${0##*/} [-h] [path]"; }
 
 # Find an unwatched video. {{{1
 #
@@ -27,7 +28,7 @@ queue() {
     echo "$next"
 }
 
-# Get the user's rating of the video.
+# Get the user's rating of the video. {{{1
 #
 # 2 point scale, influenced by:
 # http://blog.viewfinder.io/
@@ -46,6 +47,8 @@ rating() {
 }
 
 # Main {{{1
+
+case "$1" in -h|--help) usage; exit;; esac
 # Play the video
 video="$(queue "${1:-.}")"
 if [[ "$video" ]]; then
