@@ -6,7 +6,7 @@
 # Helper functions. {{{1
 app="${0##*/}"
 info() { echo "$app: $1"; }
-error() { echo "$app: $1" >&2 && exit 1; }
+error() { info "$1" >&2 && exit 1; }
 have() { which "$1" >/dev/null 2>&1; }
 
 [[ $1 ]] || error "argument required"
