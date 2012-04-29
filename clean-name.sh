@@ -1,6 +1,6 @@
 #!/bin/bash
 # Sanitise file and directory names.
-# Copyright 2009, 2010 Tom Vincent <http://tlvince.com>
+# Copyright 2009, 2010 Tom Vincent <http://tlvince.com/contact/>
 
 # Note: unmaintained! Development continued in:
 # https://github.com/tlvince/scripts-python/blob/master/sanitise.py

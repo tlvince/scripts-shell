@@ -1,6 +1,6 @@
 #!/bin/bash
 # sym: Symlink the canonical version(s) of $@ into $HOME/bin.
-# Copyright 2010-2012 Tom Vincent <http://tlvince.com>
+# Copyright 2010-2012 Tom Vincent <http://tlvince.com/contact/>
 
 usage() { echo "usage: ${0##*/} [file] -> ~/bin/[sanitised-symlink]"; exit; }
 
