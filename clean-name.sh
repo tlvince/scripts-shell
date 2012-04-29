@@ -2,6 +2,9 @@
 # Sanitise file and directory names.
 # Copyright 2009, 2010 Tom Vincent <http://www.tlvince.com/contact/>
 
+# Note: unmaintained! Development continued in:
+# https://github.com/tlvince/scripts-python/blob/master/sanitise.py
+
 PATTERNS="
     s/[A-Z]*/\L&/g          # Replace uppercase with lowercase (\L&)
     s/ /-/g                 # Replace spaces
