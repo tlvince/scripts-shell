@@ -1,45 +1,38 @@
 #!/bin/bash
-#
-# pbrisbin 2010
-#
-# put this at /usr/bin/xdg-open (or just ahead of it in $PATH) and
-# chromium will open apps sanely without all that .desktop crap
-#
-###
+# Open files based on their mime type.
+# Copyright 2010 Patrick Brisbin
+# Copyright 2012 Tom Vincent <http://tlvince.com/contact/>
 
-file="$1"
+# Helper functions. {{{1
+app="${0##*/}"
+info() { echo "$app: $1"; }
+error() { echo "$app: $1" >&2 && exit 1; }
+have() { which "$1" >/dev/null 2>&1; }
 
-[[ -z "$file" ]] && { echo 'argument required' >&2; exit 1; }
+[[ $1 ]] || error "argument required"
 
-if [[ ! -f "$file" ]]; then
-  echo "$file is not a file, trying \$BROWSER" >&2
-  $BROWSER "$file" &>/dev/null &
-  exit 0
-fi
+[[ -f "$1" ]] || {
+  info "'$1' is not a file, trying \$BROWSER"
+  $BROWSER "$1" &>/dev/null & exit
+}
 
-if ! which xdg-mime &>/dev/null; then
-  echo 'xdg-mime required' >&2
-  exit 1
-fi
+have "xdg-mime" || error "xdg-mime required"
 
 # read the major and minor mimetype
-IFS='/' read -r major minor < <(xdg-mime query filetype "$file" 2>/dev/null | cut -d ';' -f 1)
+IFS='/' read -r major minor < <(xdg-mime query filetype "$1" 2>/dev/null | cut -d ';' -f 1)
 
 # check for a specific case
 case "$major/$minor" in
-  text/html)       $BROWSER "$file" &>/dev/null & exit 0 ;;
-  application/pdf) zathura "$file"  &>/dev/null & exit 0 ;;
-  application/ogg) playnow "$file"  &>/dev/null & exit 0 ;;
-  audio/x-wav)     mplayer "$file"  &>/dev/null & exit 0 ;;
+  text/html)       $BROWSER "$1" &>/dev/null & exit ;;
+  application/pdf) zathura "$1"  &>/dev/null & exit ;;
 esac
 
 # check for just a major match
 case "$major" in
-  image) mirage "$file"        &>/dev/null & exit 0 ;;
-  audio) playnow "$file"       &>/dev/null & exit 0 ;;
-  text)  urxvtc -e vim "$file" &>/dev/null & exit 0 ;;
-  video) mplayer "$file"       &>/dev/null & exit 0 ;;
+  image) feh "$1"           &>/dev/null & exit ;;
+  audio) mplayer "$1"       &>/dev/null & exit ;;
+  text)  urxvtc -e vim "$1" &>/dev/null & exit ;;
+  video) mplayer "$1"       &>/dev/null & exit ;;
 esac
 
-echo "$file: unmatched on mimetype" >&2
-exit 1
+error "$1: unmatched on mimetype"
