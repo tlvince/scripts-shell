@@ -15,7 +15,7 @@ tunnel="ssh -fND $port $1"
 pid=$(pgrep -f "$tunnel")
 [ $pid ] && kill $pid && info "killed existing tunnel to '$1'" && exit
 
-$tunnel && info "tunnelled to '$1' on port '$port'" || error "tunnel failed"
+$tunnel && info "tunnelled to '$1' on port '$port'" || error "connection failed"
 
 [ $2 ] && {
     export SOCKS_SERVER=localhost:$port
