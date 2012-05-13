@@ -20,5 +20,5 @@ $tunnel && info "tunnelled to '$1' on port '$port'" || error "tunnel failed"
 [ $2 ] && {
     export SOCKS_SERVER=localhost:$port
     export SOCKS_VERSION=5
-    $2 >/dev/null 2>&1
+    $2 >/dev/null 2>&1 &
 }
