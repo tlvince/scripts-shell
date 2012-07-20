@@ -1,0 +1,4 @@
+#!/bin/dash
+out=$HOME/doc/pim
+mkdir -p "$out"
+echo $@ >> "$out/do.txt"
