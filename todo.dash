@@ -6,5 +6,5 @@ out=$HOME/doc/pim
 [ -d "$out" ] || mkdir -p "$out"
 todo="$out/do.txt"
 
-[ $1 ] || shuf -n 1 "$todo" && exit
+[ $1 ] || shuf -n 1 "$todo"
 echo $@ >> "$todo"
