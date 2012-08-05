@@ -10,7 +10,7 @@ usage() { echo "usage: $app host [cmd port]"; exit 1; }
 [ $1 ] || usage
 
 port=${3:-4711}
-tunnel="ssh -fND $port $1"
+tunnel="ssh -fqND $port $1"
 
 pid=$(pgrep -f "$tunnel")
 [ $pid ] && kill $pid && info "killed existing tunnel to '$1'" && exit
