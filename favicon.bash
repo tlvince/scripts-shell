@@ -1,9 +1,12 @@
 #!/bin/bash
-
-# Favicon and Apple Touch Icon Generator
+# Favicon and Apple Touch Icon Generator.
+# Copyright 2012 @emarref
+# Copyright 2012 Tom Vincent <http://tlvince.com/contact>	
+# From: https://gist.github.com/3374193
 #
-# This bash script takes an image as a parameter, and uses ImageMagick to convert it to several
-# other formats used on modern websites. The following copies are generated:
+# This bash script takes an image as a parameter, and uses ImageMagick to
+# convert it to several other formats used on modern websites. The following
+# copies are generated:
 # 
 # * apple-touch-icon-114x114-precomposed.png
 # * apple-touch-icon-57x57-precomposed.png
@@ -12,52 +15,43 @@
 # * apple-touch-icon.png
 # * favicon.ico
 #
-# Concept from http://bergamini.org/computers/creating-favicon.ico-icon-files-with-imagemagick-convert.html
+# Concept from
+# http://bergamini.org/computers/creating-favicon.ico-icon-files-with-imagemagick-convert.html
 
-CONVERT_CMD=`which convert`
-SRC_IMAGE=$1
-PWD=`pwd`
+info() { echo "$0: $1"; }
+error() { info "$1" >&2 && exit 1; }
+have() { which "$1" >/dev/null 2>&1; }
+usage() { echo "usage: $0 src_image [dest_dir]"; exit 1; }
 
-if [ -z $CONVERT_CMD ] || [ ! -f $CONVERT_CMD ] || [ ! -x $CONVERT_CMD ];
-then
-    echo "ImageMagick needs to be installed to run this script"
-    exit;
-fi
+[ $1 ] || usage
+have convert || error "ImageMagick not found"
 
-if [ -z $SRC_IMAGE ];
-then
-	echo "You must supply a source image as the argument to this command."
-	exit;
-fi
+tmp="$(mktemp -d)"
 
-if [ ! -f $SRC_IMAGE ];
-then
-    echo "Source image \"$SRC_IMAGE\" does not exist."
-    exit;
-fi
+info "Generating square base image"
+convert "$1" -flatten -resize 256x256! -transparent white "$tmp/favicon-256.png"
+[ -f "$tmp/favicon-256.png" ] || error "Generating square base image failed"
 
-echo "Generating square base image"
-$CONVERT_CMD $SRC_IMAGE -resize 256x256! -transparent white $PWD/favicon-256.png
+info "Generating various sizes for ico"
+convert "$tmp/favicon-256.png" -resize 16x16 "$tmp/favicon-16.png"
+convert "$tmp/favicon-256.png" -resize 32x32 "$tmp/favicon-32.png"
+convert "$tmp/favicon-256.png" -resize 64x64 "$tmp/favicon-64.png"
+convert "$tmp/favicon-256.png" -resize 128x128 "$tmp/favicon-128.png"
 
-echo "Generating various sizes for ico"
-$CONVERT_CMD $PWD/favicon-256.png -resize 16x16 $PWD/favicon-16.png
-$CONVERT_CMD $PWD/favicon-256.png -resize 32x32 $PWD/favicon-32.png
-$CONVERT_CMD $PWD/favicon-256.png -resize 64x64 $PWD/favicon-64.png
-$CONVERT_CMD $PWD/favicon-256.png -resize 128x128 $PWD/favicon-128.png
+info "Generating ico"
+# ico supports multiple resolutions in one file
+convert $tmp/favicon-{16,32,64,128,256}.png -colors 256 $tmp/favicon.ico
 
-echo "Generating ico"
-$CONVERT_CMD $PWD/favicon-16.png $PWD/favicon-32.png $PWD/favicon-64.png $PWD/favicon-128.png $PWD/favicon-256.png -colors 256 $PWD/favicon.ico
+info "Generating touch icons"
+convert "$tmp/favicon-256.png" -resize 57x57 "$tmp/apple-touch-icon.png"
+cp "$tmp/apple-touch-icon.png" "$tmp/apple-touch-icon-precomposed.png"
+cp "$tmp/apple-touch-icon.png" "$tmp/apple-touch-icon-57x57-precomposed.png"
+convert "$tmp/favicon-256.png" -resize 72x72 \
+	"$tmp/apple-touch-icon-72x72-precomposed.png"
+convert "$tmp/favicon-256.png" -resize 114x114 \
+	"$tmp/apple-touch-icon-114x114-precomposed.png"
 
-echo "Generating touch icons"
-$CONVERT_CMD $PWD/favicon-256.png -resize 57x57 $PWD/apple-touch-icon.png
-cp $PWD/apple-touch-icon.png $PWD/apple-touch-icon-precomposed.png
-cp $PWD/apple-touch-icon.png $PWD/apple-touch-icon-57x57-precomposed.png
-$CONVERT_CMD $PWD/favicon-256.png -resize 72x72 $PWD/apple-touch-icon-72x72-precomposed.png
-$CONVERT_CMD $PWD/favicon-256.png -resize 114x114 $PWD/apple-touch-icon-114x114-precomposed.png
+info "Removing temp files"
+rm $tmp/favicon-{16,32,64,128,256}.png
 
-echo "Removing temp files"
-rm -rf $PWD/favicon-16.png
-rm -rf $PWD/favicon-32.png
-rm -rf $PWD/favicon-64.png
-rm -rf $PWD/favicon-128.png
-rm -rf $PWD/favicon-256.png
+[ "$2" ] && { mkdir -p "$2"; mv $tmp/* "$2"; rm -rf "$tmp"; } || info "$tmp"
