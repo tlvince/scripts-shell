@@ -1,0 +1,18 @@
+#!/bin/dash
+# Global system update script. {{{1
+# Copyright 2009-2012 Tom Vincent <http://tlvince.com/contact>
+# vim: set fdm=marker
+
+# Globals {{{1
+adblock="$HOME/src/py/scripts/build-adblock.py"
+
+# Helpers {{{1
+# Is $1 installed?
+_have() { which "$1" >/dev/null 2>&1; }
+
+# Main {{{1
+_have pacman && sudo pacman -Syu
+_have raury && raury -Syu --devs
+_have dmenu_path && dmenu_path >/dev/null
+_have python && [ -f "$adblock" ] && python "$adblock"
+_have dwbem && dwbem -u
