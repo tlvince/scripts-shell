@@ -8,13 +8,13 @@ have()  { which "$1" >/dev/null 2>&1; }
 info()  { echo "$0: $1"; }
 error() { info "$1" >&2 && exit 1; }
 
-[ "$feed" ]      || feed="https://www.archlinux.org/feeds/news/"
-[ "$cache" ]     || cache="${XDG_CACHE_HOME:-$HOME/.cache}/archnews"
-[ "$entry" ]     || entry="$cache/latest-entry.html"
-[ "$BROWSER" ]   || BROWSER="less"
-[ "$lastran" ]   || lastran="$cache/lastran"
-[ "$news_xml" ]  || news_xml="$cache/news.xml"
-[ "$news_html" ] || news_html="$cache/news.html"
+feed="${feed:-https://www.archlinux.org/feeds/news/}"
+cache="${cache:-${XDG_CACHE_HOME:-$HOME/.cache}/archnews}"
+entry="${entry:-$cache/latest-entry.html}"
+BROWSER="${BROWSER:-less}"
+lastran="${lastran:-$cache/lastran}"
+news_xml="${news_xml:-$cache/news.xml}"
+news_html="${news_html:-$cache/news.html}"
 
 [ -d "$cache" ]  || mkdir -p "$cache"
 have "xmllint"   || error "xmllint(1) required"
