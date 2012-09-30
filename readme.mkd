@@ -2,3 +2,11 @@
 
 Various multi-purpose shell scripts that are too small to warrant their own
 repository. See individual files for usage descriptions.
+
+## Author
+
+Copyright 2009-2012 Tom Vincent <http://tlvince.com/contact>
+
+## License
+
+Released under the [MIT License](http://tlvince.mit-license.org/).
