@@ -5,8 +5,8 @@
 
 usage() { echo "$0 [-v] out_dir" && exit 1; }
 
-[ $1 ] || usage
-[ $1 = "-v" ] && { verbose=true; shift; } || verbose=false
+[ "$1" = "-v" ] && { verbose=true; shift; } || verbose=false
+[ "$1" ] || usage
 
 packages="$(pacman -Sl)"
 repos="$(echo "$packages" | cut -f1 -d ' ' | uniq)"
