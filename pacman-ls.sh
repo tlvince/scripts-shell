@@ -3,23 +3,27 @@
 # Copyright 2010-12 Tom Vincent <http://tlvince.com/contact>
 # See also: paclist (community/pacman-contrib)
 
-PACKAGES="$(pacman -Sl)"
-REPOS="$(echo "$PACKAGES" | cut -f1 -d ' ' | uniq)"
-OUT="${OUT:-$HOME/bak/packages}"
-VERBOSE="${VERBOSE:-false}"
+usage() { echo "$0 [-v] out_dir" && exit 1; }
 
-mkdir -p "$OUT"
+[ $1 ] || usage
+[ $1 = "-v" ] && { verbose=true; shift; } || verbose=false
 
-$VERBOSE && echo "Total installed packages:"
-  for repo in $REPOS; do
-  list="$(echo "$PACKAGES" | grep "^$repo")"
+packages="$(pacman -Sl)"
+repos="$(echo "$packages" | cut -f1 -d ' ' | uniq)"
+
+out="$1"
+mkdir -p "$out"
+
+$verbose && echo "Total installed packages:"
+  for repo in $repos; do
+  list="$(echo "$packages" | grep "^$repo")"
   installed="$(echo "$list" | grep "\[installed\]")"
-  echo "$installed" | cut -f2 -d ' ' > "$OUT/$repo.txt"
-  $VERBOSE && {
+  echo "$installed" | cut -f2 -d ' ' > "$out/$repo.txt"
+  $verbose && {
     echo "$repo: $(echo "$installed" | wc -l)/$(echo "$list" | wc -l)"
   }
 done
 
 list="$(pacman -Qqm)"
-echo "$list" > "$OUT/aur.txt"
-$VERBOSE && echo "aur: $(echo "$list" | wc -l)"
+echo "$list" > "$out/aur.txt"
+$verbose && echo "aur: $(echo "$list" | wc -l)"
