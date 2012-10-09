@@ -15,13 +15,13 @@ tunnel="tunnel $*"
 [ -f /run/redsocks/redsocks.pid ] && {
   info "killing existing socks proxy to '$1'"
   $tunnel
-  sudo rc.d stop redsocks
-  sudo rc.d restart iptables
+  sudo systemctl stop redsocks.service
+  sudo systemctl restart iptables.service
   exit
 }
 
 # Start
 info "starting socks proxy to '$1'"
 $tunnel
-sudo rc.d start redsocks
+sudo systemctl start redsocks.service
 sudo iptables-restore /etc/iptables/redsocks.rules
