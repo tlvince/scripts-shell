@@ -11,3 +11,4 @@ _have raury && raury -Syu --devs --no-edit --no-confirm
 _have dmenu_path && dmenu_path >/dev/null
 adblock="update-adblock.dash"; [ -f "$adblock" ] && "./$adblock"
 _have dwbem && dwbem --upgrade
+_have hostsblock && sudo hostsblock
