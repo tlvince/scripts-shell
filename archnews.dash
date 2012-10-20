@@ -32,11 +32,11 @@ if [ "$ran_date" ]; then
   if [ "$unix_build_date" -gt "$(date --date "$ran_date" +%s)" ]; then
     xmllint --xpath "/rss/channel/item[1]/description/text()" "$news_xml" | \
       recode HTML_4.0 > "$entry"
-    "$BROWSER" "$entry"
+    "$BROWSER" "$entry" >/dev/null 2>&1
   fi
 else
   xmllint --htmlout "$news_xml" 2>&1 | recode HTML_4.0 > "$news_html"
-  "$BROWSER" "$news_html"
+  "$BROWSER" "$news_html" >/dev/null 2>&1
 fi
 
 date --rfc-2822 > "$lastran"
