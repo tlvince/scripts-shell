@@ -5,7 +5,7 @@ repository. See individual files for usage descriptions.
 
 ## Author
 
-Copyright 2009-2012 Tom Vincent <http://tlvince.com/contact>
+Copyright 2009-2013 Tom Vincent <http://tlvince.com/contact>
 
 ## License
 
