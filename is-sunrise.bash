@@ -17,4 +17,4 @@ urise="$(date -d $rise +%s)"
 uset="$(date -d $set +%s)"
 unow="$(date -d $now +%s)"
 
-[[ $unow -ge $urise && $unow -lt $uset ]] && echo true || echo false
+[[ $unow -ge $urise && $unow -lt $uset ]] && exit 0 || exit 1
