@@ -19,7 +19,7 @@ add() {
 }
 
 search() {
-  grep "$@" "$BOOKMARKS" | urlview
+  grep -i "$@" "$BOOKMARKS" | urlview
 }
 
 touch "$BOOKMARKS"
