@@ -36,10 +36,10 @@ add() {
 }
 
 search() {
-  grep -i "$@" "$BOOKMARKS" | urlview
+  egrep -i "${*// /|}" "$BOOKMARKS" | urlview
 }
 
 [[ -d "$BOOKMARKS_DIR" ]] || mkdir -p "$BOOKMARKS_DIR"
 [[ -d "$GIT_DIR" ]] || git init
 touch "$BOOKMARKS"
-[[ $# -eq 0 ]] && add || search "$@"
+[[ $# -eq 0 ]] && add || search "$*"
