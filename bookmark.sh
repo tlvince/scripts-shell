@@ -22,4 +22,5 @@ search() {
   grep "$@" "$BOOKMARKS" | urlview
 }
 
+touch "$BOOKMARKS"
 [[ $# -eq 0 ]] && add || search "$@"
