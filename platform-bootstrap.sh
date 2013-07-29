@@ -11,7 +11,7 @@ usage() { echo "$0 [-h] site"; }
 [ -n "$1" ] || { usage && exit 1; }
 site="$1"
 
-grep -q "127.0.0.1.*$site" "/etc/hosts" && error "$site vhost pre-exists"
+grep -q "127.0.0.1.*$site$" "/etc/hosts" && error "$site vhost pre-exists"
 
 vhosts="/etc/apache2/extra/httpd-vhosts.conf"
 cat << EOF | sudo tee -a "$vhosts" >/dev/null
