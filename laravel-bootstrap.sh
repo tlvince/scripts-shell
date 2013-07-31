@@ -2,22 +2,24 @@
 # Boostrap a new Laravel site.
 # © 2013 Tom Vincent <http://tlvince.com/contact>
 
+vhosts="${vhosts:-/etc/apache2/extra/httpd-vhosts.conf}"
+sites="${sites:-$HOME/sites}"
+
 # Helpers
 info() { echo "$0: $1"; }
 error() { info "$1"; exit 1; }
-usage() { echo "$0 [-h] site"; }
+usage() { echo "[vhosts] [sites] $0 [-h] site"; }
 
 [ "$1" == "-h" ] && { usage && exit; }
 [ -n "$1" ] || { usage && exit 1; }
 site="$1"
 
-grep -q "127.0.0.1.*$site$" "/etc/hosts" && error "$site vhost pre-exists"
+grep -q "127.0.0.1.*$site$" "/etc/hosts" && error "$site host pre-exists"
 
-vhosts="/etc/apache2/extra/httpd-vhosts.conf"
 cat << EOF | sudo tee -a "$vhosts" >/dev/null
 <VirtualHost *:80>
   ServerName "$site"
-  DocumentRoot "/Users/tom/Sites/$site/public"
+  DocumentRoot "$sites/$site/public"
 </VirtualHost>
 
 EOF
