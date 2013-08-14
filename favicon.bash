@@ -26,32 +26,26 @@ usage() { echo "usage: $0 src_image [dest_dir]"; exit 1; }
 [ $1 ] || usage
 have convert || error "ImageMagick not found"
 
-tmp="$(mktemp -d)"
+tmp="$(mktemp -d favicon.XXX)"
 
 info "Generating square base image"
 convert "$1" -flatten -resize 256x256! -transparent white "$tmp/favicon-256.png"
 [ -f "$tmp/favicon-256.png" ] || error "Generating square base image failed"
 
-info "Generating various sizes for ico"
-convert "$tmp/favicon-256.png" -resize 16x16 "$tmp/favicon-16.png"
-convert "$tmp/favicon-256.png" -resize 32x32 "$tmp/favicon-32.png"
-convert "$tmp/favicon-256.png" -resize 64x64 "$tmp/favicon-64.png"
-convert "$tmp/favicon-256.png" -resize 128x128 "$tmp/favicon-128.png"
-
 info "Generating ico"
-# ico supports multiple resolutions in one file
-convert $tmp/favicon-{16,32,64,128,256}.png -colors 256 $tmp/favicon.ico
+convert "$tmp/favicon-256.png" -resize 16x16 "$tmp/favicon-16.png"
+convert "$tmp/favicon-16.png" -colors 256 "$tmp/favicon.ico"
 
 info "Generating touch icons"
 convert "$tmp/favicon-256.png" -resize 57x57 "$tmp/apple-touch-icon.png"
 cp "$tmp/apple-touch-icon.png" "$tmp/apple-touch-icon-precomposed.png"
 cp "$tmp/apple-touch-icon.png" "$tmp/apple-touch-icon-57x57-precomposed.png"
-convert "$tmp/favicon-256.png" -resize 72x72 \
-	"$tmp/apple-touch-icon-72x72-precomposed.png"
-convert "$tmp/favicon-256.png" -resize 114x114 \
-	"$tmp/apple-touch-icon-114x114-precomposed.png"
+convert "$tmp/favicon-256.png" -resize 72x72 "$tmp/apple-touch-icon-72x72-precomposed.png"
+convert "$tmp/favicon-256.png" -resize 114x114 "$tmp/apple-touch-icon-114x114-precomposed.png"
+convert "$tmp/favicon-256.png" -resize 120x120 "$tmp/apple-touch-icon-120x120-precomposed.png"
+convert "$tmp/favicon-256.png" -resize 144x144 "$tmp/apple-touch-icon-144x144-precomposed.png"
 
 info "Removing temp files"
-rm $tmp/favicon-{16,32,64,128,256}.png
+rm "$tmp/favicon-16.png"
 
 [ "$2" ] && { mkdir -p "$2"; mv $tmp/* "$2"; rm -rf "$tmp"; } || info "$tmp"
