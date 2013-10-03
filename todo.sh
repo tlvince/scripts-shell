@@ -1,4 +1,4 @@
-#!/bin/dash
+#!/bin/sh
 # Todo list manager.
 # Copyright 2012 Tom Vincent <http://tlvince.com/contact/>
 

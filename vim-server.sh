@@ -1,4 +1,4 @@
-#!/bin/dash
+#!/bin/sh
 # Single instance Vim.
 # Copyright 2012 Tom Vincent <http://tlvince.com/contact>
 

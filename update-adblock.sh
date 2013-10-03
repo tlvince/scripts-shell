@@ -1,4 +1,4 @@
-#!/bin/dash
+#!/bin/sh
 # Update adblock element hiding list.
 # Copyright 2012 Tom Vincent <http://tlvince.com/contact>
 

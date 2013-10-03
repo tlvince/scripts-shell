@@ -1,4 +1,4 @@
-#!/bin/dash
+#!/bin/sh
 # pacman-ls.sh: List installed packages by repo.
 # Copyright 2010-12 Tom Vincent <http://tlvince.com/contact>
 # See also: paclist (community/pacman-contrib)

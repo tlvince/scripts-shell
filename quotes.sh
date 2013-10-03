@@ -1,4 +1,4 @@
-#!/bin/dash
+#!/bin/sh
 # Convert plain-text quotes into bootstrap-aware HTML.
 # Copyright 2013 Tom Vincent <http://tlvince.com/contact>
 

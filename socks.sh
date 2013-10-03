@@ -1,4 +1,4 @@
-#!/bin/dash
+#!/bin/sh
 # Start a transparent socks session.
 # Copyright 2012 Tom Vincent <http://tlvince.com/contact/>
 

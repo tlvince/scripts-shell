@@ -1,4 +1,4 @@
-#!/bin/dash
+#!/bin/sh
 # Replaces a human-readable image directive with an in-line Markdown equivalent.
 # Author: Tom Vincent <http://tlvince.com/contact/>
 #

@@ -1,4 +1,4 @@
-#!/bin/dash
+#!/bin/sh
 # Toggle an SSH tunnel to the given host, optionally starting [cmd] with SOCKS.
 # Copyright 2012 Tom Vincent <http://tlvince.com/contact/>
 

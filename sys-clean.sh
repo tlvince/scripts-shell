@@ -1,4 +1,4 @@
-#!/bin/dash
+#!/bin/sh
 # A system clean-up script. {{{1
 # Copyright 2009-2012 Tom Vincent <http://tlvince.com/contact>
 # vim: set fdm=marker

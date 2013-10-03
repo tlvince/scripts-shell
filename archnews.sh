@@ -1,4 +1,4 @@
-#!/bin/dash
+#!/bin/sh
 # archnews: download and view the latest Arch Linux news entry. {{{1
 # Copyright 2012 Tom Vincent <http://tlvince.com/contact>
 # vim: fdm=marker

@@ -1,4 +1,4 @@
-#!/bin/dash
+#!/bin/sh
 # Backup Twitter using the 't' gem.
 # Copyright 2012 Tom Vincent <http://tlvince.com/contact>
 

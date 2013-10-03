@@ -1,4 +1,4 @@
-#!/bin/dash
+#!/bin/sh
 # Global system update script.
 # Copyright 2009-2012 Tom Vincent <http://tlvince.com/contact>
 
