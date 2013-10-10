@@ -24,7 +24,9 @@ cat << EOF | sudo tee -a "$vhosts" >/dev/null
 
 EOF
 
-echo "127.0.0.1 $site" | sudo tee -a "/etc/hosts" >/dev/null
+for i in /etc/hosts{,local}; do
+  echo "127.0.0.1 $site" | sudo tee -a "$i" >/dev/null
+done
 
 # Set credentials in ~/.my.cnf
 mysql -e \
