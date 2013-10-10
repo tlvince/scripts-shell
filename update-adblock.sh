@@ -19,8 +19,7 @@ if [ -f "$locals" ]; then
   combined="$(mktemp /tmp/hosts.XXX)"
   cat "$tmp" "$locals" > "$combined"
   sudo mv "$combined" "/etc/hosts"
-  rm "$combined"
+  rm "$tmp"
 else
   sudo mv "$tmp" "/etc/hosts"
-  rm "$tmp"
 fi
