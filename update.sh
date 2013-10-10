@@ -39,6 +39,8 @@ case "$PLATFORM" in
     _have gem && sudo gem update
     _info "Updating Chromium"
     _have update-chromium && update-chromium
+    _info "Updating adblocking hosts files"
+    _have update-adblock && update-adblock
   ;;
 esac
 
