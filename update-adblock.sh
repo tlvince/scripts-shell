@@ -8,7 +8,7 @@ tmp="$(mktemp /tmp/hosts.XXX)"
 
 # Sources
 mvps="http://winhelp2002.mvps.org/hosts.txt"
-hphosts="http://hosts-file.net/download/hosts.txt"
+hphosts="http://hosts-file.net/ad_servers.txt"
 danp="http://someonewhocares.org/hosts/hosts"
 yoyo="http://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=0&mimetype=plaintext"
 
