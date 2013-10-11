@@ -27,3 +27,5 @@ fi
 sudo chown root:wheel "/etc/hosts"
 sudo chmod go+r "/etc/hosts"
 sudo dos2unix "/etc/hosts"
+
+dscacheutil -flushcache
