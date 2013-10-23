@@ -23,4 +23,5 @@ $curl --output "$out/$zip" "$url/$rev/$zip"
 unzip -d "$out" "$out/$zip"
 rm "$out/$zip"
 
-ln -s "$out/chrome-mac/Chromium.app" "$HOME/Applications"
+app="$HOME/Applications/Chromium.app"
+[ -h "$app" ] || ln -s "$out/chrome-mac/Chromium.app" "$HOME/Applications"
