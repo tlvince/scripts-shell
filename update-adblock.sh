@@ -35,6 +35,13 @@ sed="sed"
 info "Processing hosts"
 $sed -e "$PATTERNS" < "$tmp" | sort --unique --output="$tmp"
 
+whitelist="/etc/hosts.whitelist"
+[ -f "$whitelist" ] && {
+  while read line; do
+    $sed -i "/$line$/d" "$tmp"
+  done < "$whitelist"
+}
+
 head="/etc/hosts.head"
 tail="/etc/hosts.tail"
 [ -f "$head" ] && [ -f "$tail" ] || { rm "$tmp" && exit 1; }
