@@ -6,7 +6,7 @@ _info() { echo ":: $1..."; }
 _have() { which "$1" >/dev/null 2>&1; }
 _error() { echo "$1"; exit 1; }
 
-_have platform || error "Can't determine platform"
+_have platform || _error "Can't determine platform"
 case "$PLATFORM" in
   "Arch")
     _info "Checking for new Arch Linux news entries"
