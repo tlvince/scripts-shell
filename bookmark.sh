@@ -20,6 +20,7 @@ _commit() {
 
 add() {
   read -p "URL: " url
+  [[ "$url" ]] || { echo "Missing URL" && exit 1; }
 
   line="$(grep -n "^$url" "$BOOKMARKS" | cut -f1 -d:)"
   if [[ "$line" =~ ^[0-9]+$ ]]; then
