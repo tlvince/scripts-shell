@@ -2,6 +2,9 @@
 # Hosts file adblock update.
 # © 2013 Tom Vincent <http://tlvince.com/contact>
 
+usage() { echo "[VERBOSE=true|false] [GIST_ID=ID] $0" && exit; }
+[ "$1" = "-h" ] || [ "$1" = "--help" ] && usage
+
 VERBOSE=${VERBOSE:-true}
 info() { $VERBOSE && echo "$0: $1"; }
 tmp="$(mktemp /tmp/hosts.XXX)"
@@ -52,3 +55,8 @@ cat "$head" "$tmp" "$tail" | sudo tee "/etc/hosts" >/dev/null
 info "Updating DNS cache"
 $osx && dscacheutil -flushcache
 rm "$tmp"
+
+[ "$GIST_ID" ] && {
+  info "Backing up appendices to Gist"
+  gist --update "$GIST_ID" "$tail"
+}
