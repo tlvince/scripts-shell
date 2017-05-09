@@ -11,9 +11,9 @@ tmp="$(mktemp /tmp/hosts.XXX)"
 
 # Sources
 mvps="http://winhelp2002.mvps.org/hosts.txt"
-hphosts="http://hosts-file.net/ad_servers.txt"
+hphosts="https://hosts-file.net/ad_servers.txt"
 danp="http://someonewhocares.org/hosts/hosts"
-yoyo="http://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=0&mimetype=plaintext"
+yoyo="https://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=0&mimetype=plaintext"
 
 for i in "$mvps" "$hphosts" "$danp" "$yoyo"; do
   info "Downloading '$i'"
@@ -51,10 +51,6 @@ tail="/etc/hosts.tail"
 
 info "Writing hosts"
 cat "$head" "$tmp" "$tail" | sudo tee "/etc/hosts" >/dev/null
-
-info "Updating DNS cache"
-$osx && dscacheutil -flushcache
-rm "$tmp"
 
 [ "$GIST_ID" ] && {
   info "Backing up appendices to Gist"
