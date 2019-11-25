@@ -18,13 +18,18 @@ verbose=true
 wpuser='' #wordpress.com user name
 wpblog='' #wordpress.com blog name (the part that appears in the domain)
 wppwd='' #wordpress.com password
+credentials_file=./.credentials
+
+if [ -f $credentials_file ] && [ -z "$wpblog" ] && [ -z "$wpuser" ] && [ -z "$wppwd" ];then
+ 	source $credentials_file;
+fi
 
 timestamp=`date +%Y%m%d%H%M`; #for our export file
 
 #check for prefix in arguments
 case $# in
 1) prefix=$1;;
-*) prefix='.';;
+*) prefix='./temp/';;
 esac
 
 #check to add / after directory if ommited
